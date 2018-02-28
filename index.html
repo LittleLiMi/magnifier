@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>放大镜</title>
+	<style>
+		body{
+			margin:0;
+			background-color: pink;
+		}
+		#img{
+			width:350px;height:350px;
+			position: relative;
+		}
+		#mark{
+			display: block;
+			width:350px;height:350px;
+			position: absolute;
+			top:0;left:0;
+			background: red;
+			z-index:2;
+			opacity: 0;
+		}
+		#float{
+			display: block;
+			width:70px;height:70px;
+			background: rgba(0,0,0,0.3);
+			position: absolute;
+			top:0;left:0;
+			display: none;
+		}
+		#big{
+			position: relative;
+			float: left;
+			width:400px;
+			height:400px;
+			top:-350px;left:380px;
+			overflow: hidden;
+		}
+		#bigImg{
+			position:absolute;
+			display:none;
+		}
+	</style>
+</head>
+<body>
+
+	<div id="img">
+		<span id="mark"></span>
+		<img src="images/1.jpg" alt="" />
+		<span id="float"></span>
+	</div>
+
+	<div id="big">
+		<img id="bigImg" src="images/2.jpg" alt="" />
+	</div>
+</body>
+<script>
+window.onload = function(){
+	var oDiv = document.getElementById('img');
+	var oMark = document.getElementById('mark');
+	var aImg = document.getElementsByTagName('img');
+	var oFloat = document.getElementById('float');
+	var oBig = document.getElementById('big');
+
+	oMark.onmouseover = function(){
+		oFloat.style.display = 'block';
+		aImg[1].style.display = 'block';
+	}
+	oMark.onmouseout = function(){
+		oFloat.style.display = 'none';
+		aImg[1].style.display = 'none';
+	}
+	oMark.onmousemove = function(ev){
+
+		var oEvent = ev || event;
+
+		var l = oEvent.clientX-oDiv.offsetLeft-aImg[0].offsetLeft-oFloat.offsetWidth/2;
+		var t = oEvent.clientY-oDiv.offsetTop-aImg[0].offsetTop-oFloat.offsetHeight/2;
+
+		if(l<0){
+			l=0;
+		}else if(l>oDiv.offsetWidth-oFloat.offsetWidth){
+			l=oDiv.offsetWidth-oFloat.offsetWidth;
+		}
+		if(t<0){
+			t=0;
+		}else if(t>oDiv.offsetHeight-oFloat.offsetHeight){
+			t=oDiv.offsetHeight-oFloat.offsetHeight;
+		}
+
+		oFloat.style.left = l+'px';
+		oFloat.style.top = t+'px';
+
+		var percentX=l/(oMark.offsetWidth-oFloat.offsetWidth);
+		var percentY=t/(oMark.offsetHeight-oFloat.offsetHeight);
+		
+		aImg[1].style.left=-percentX*(aImg[1].offsetWidth-oBig.offsetWidth)+'px';
+		aImg[1].style.top=-percentY*(aImg[1].offsetHeight-oBig.offsetHeight)+'px';
+	}
+
+};
+</script>
+</html>
